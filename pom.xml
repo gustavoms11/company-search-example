@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.fluig</groupId>
+	<artifactId>company-search</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>company-search</name>
+	<description>Demo project for Spring Boot</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<java.version>1.8</java.version>
+		<spring.boot.version>2.0.2.RELEASE</spring.boot.version>
+		<fluig.starter.version>1.0.1-SNAPSHOT</fluig.starter.version>
+		<clover.version>4.2.1</clover.version>
+		<clover.default.db.dir>${project.basedir}/.clover/db/clover.db</clover.default.db.dir>
+		<clover.default.output.dir>${project.basedir}/.clover/report</clover.default.output.dir>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.fluig</groupId>
+				<artifactId>fluig-starter-dependencies</artifactId>
+				<version>${fluig.starter.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-undertow</artifactId>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fluig</groupId>
+			<artifactId>fluig-starter-test</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.openclover</groupId>
+				<artifactId>clover-maven-plugin</artifactId>
+				<version>${clover.version}</version>
+				<configuration>
+					<targetPercentage>60%</targetPercentage>
+					<cloverDatabase>${project.basedir}/target/.clover/db/clover.db</cloverDatabase>
+					<cloverMergeDatabase>${project.basedir}/target/.clover/merge/cloverMerge.db
+					</cloverMergeDatabase>
+					<contextFilters>iflog,log</contextFilters>
+					<outputDirectory>${project.basedir}/target/.clover/report</outputDirectory>
+					<includesTestSourceRoots>false</includesTestSourceRoots>
+					<statementContexts>
+						<log>System.out.println\(.*\);</log>
+						<iflog>if.*\(LOG\.is.*\.*</iflog>
+					</statementContexts>
+				</configuration>
+				<executions>
+					<execution>
+						<id>main</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>instrument</goal>
+							<goal>aggregate</goal>
+							<goal>check</goal>
+							<goal>clover</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.pitest</groupId>
+				<artifactId>pitest-maven</artifactId>
+				<version>1.4.0</version>
+				<executions>
+					<execution>
+						<phase>test</phase>
+						<goals>
+							<goal>mutationCoverage</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<coverageThreshold>18</coverageThreshold>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+
+</project>
